@@ -1,70 +1,156 @@
-# Getting Started with Create React App
+# 🎮 Arabic Letters Game
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+An interactive educational game based on Arabic letters, where two teams (Green and Purple) compete to control a hexagonal board by answering questions.
 
-## Available Scripts
+## ✨ Features
 
-In the project directory, you can run:
+- 🎯 **Interactive Hexagonal Board** - 25 cells with random Arabic letters
+- 👥 **Multiplayer Mode** - One controller and multiple players
+- ⚡ **Real-time Updates** - Using Supabase Realtime
+- 📱 **Responsive Design** - Works on all devices
+- 🎨 **Beautiful Arabic Interface** - With Cairo and Noto Sans Arabic fonts
+- 💾 **Large Question Database** - 840 questions across 28 letters
+- 🔐 **Room System** - 6-digit sharing code
+- ⏱️ **60-Second Timer** - Persistent countdown that syncs across all players
 
-### `npm start`
+### Installation
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+**Clone the project**
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 🎮 How to Play
 
-### `npm test`
+### For Controller:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. **Create a new room**
 
-### `npm run build`
+   - Click "New Room" (غرفة جديدة)
+   - You'll get a 6-digit room code
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+2. **Share the code**
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+   - Share the room code with players
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+3. **Start playing**
+   - Select a cell on the board
+   - A hidden question will appear with its answer (only you see the answer)
+   - Click "Show Question" (إظهار السؤال) to reveal it to everyone
+   - 60-second timer starts automatically
+   - Choose the cell color (Green, Purple, or White)
 
-### `npm run eject`
+### For Players:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+1. **Join a room**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+   - Click "Join Room" (انضم إلى غرفة)
+   - Enter the 6-digit room code
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+2. **Watch and participate**
+   - Watch the board and gameplay in real-time
+   - See the 60-second countdown timer
+   - Read the question when the controller reveals it
+   - Help your team answer!
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## 🏗️ Technical Architecture
 
-## Learn More
+### Technologies Used
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- **React** - UI library
+- **Material-UI (MUI)** - Component library
+- **Supabase** - Database and real-time updates
+- **React Router** - Navigation
+- **UUID** - Unique identifier generation
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Project Structure
 
-### Code Splitting
+```
+src/
+├── components/
+│   ├── Game.js              # Main controller screen
+│   ├── PlayerView.js        # Players screen
+│   ├── EntryModal.js        # Entry screen
+│   ├── GameBoard.js         # Game board
+│   ├── HexCell.js           # Hexagonal cell
+│   ├── QuestionModal.js     # Question modal
+│   └── SidePanel.js         # Side panel
+├── supabas-client.ts        # Supabase setup
+├── App.js                   # Main component
+└── index.js                 # Entry point
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## 📊 Database Schema
 
-### Analyzing the Bundle Size
+### `games` Table
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+| Column             | Type      | Description                 |
+| ------------------ | --------- | --------------------------- |
+| gameId             | UUID      | Unique game identifier      |
+| sharedId           | TEXT      | Sharing code (6 digits)     |
+| currentTeam        | TEXT      | Current team (green/purple) |
+| boardState         | JSONB     | Board state                 |
+| currentQuestion    | TEXT      | Current question            |
+| isQuestionRevealed | BOOLEAN   | Is question revealed?       |
+| timerStartTime     | TIMESTAMP | When the 60s timer started  |
+| created_at         | TIMESTAMP | Game creation time          |
 
-### Making a Progressive Web App
+### `questions` Table
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+| Column       | Type   | Description   |
+| ------------ | ------ | ------------- |
+| id           | SERIAL | Identifier    |
+| letter       | TEXT   | Arabic letter |
+| questionText | TEXT   | Question text |
+| answer       | TEXT   | Answer        |
 
-### Advanced Configuration
+## 🎨 Customization
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### Change Colors
 
-### Deployment
+In component files, you can modify colors:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+```javascript
+// Green team
+primary: {
+  main: "#22C55E";
+}
 
-### `npm run build` fails to minify
+// Purple team
+secondary: {
+  main: "#A855F7";
+}
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## 🎯 Game Features
+
+### For Controller:
+
+- ✅ View questions with answers
+- ✅ Control question reveal timing
+- ✅ Choose cell colors
+- ✅ See room code
+- ✅ Monitor 60-second timer
+
+### For Players:
+
+- 👀 View board in real-time
+- 📖 Read questions when revealed
+- ⏱️ See synchronized 60-second timer
+- 🚫 Cannot see answers
+- 🚫 Cannot control the game
+
+## 📝 License
+
+This project is open source and available for personal and educational use.
+
+## 🤝 Contributing
+
+Contributions are welcome! Feel free to open an Issue or Pull Request.
+
+## 📧 Contact
+
+If you have any questions or suggestions, feel free to reach out!
+
+**Email:** samaali2h@gmail.com
+
+---
+
+Made with ❤️ for education and fun
+```

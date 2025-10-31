@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -21,7 +21,22 @@ const QuestionModal = ({
   onAnswer,
   isQuestionRevealed,
   onRevealQuestion,
+  onChangeQuestion,
 }) => {
+  const [isAnswerRevealed, setIsAnswerRevealed] = useState(false);
+
+  // Reset answer reveal state when modal opens/closes or question changes
+  useEffect(() => {
+    if (!open) {
+      setIsAnswerRevealed(false);
+    }
+  }, [open, question]);
+
+  // Reset answer reveal when question changes
+  useEffect(() => {
+    setIsAnswerRevealed(false);
+  }, [question]);
+
   if (!selectedCell) return null;
 
   const handleAnswer = (answer) => {
@@ -43,6 +58,7 @@ const QuestionModal = ({
     >
       <DialogTitle sx={{ textAlign: "center", padding: "20px 0" }}>
         <Typography
+          component="div"
           variant="h4"
           sx={{
             fontWeight: "bold",
@@ -121,6 +137,38 @@ const QuestionModal = ({
                 {question}
               </Typography>
 
+              {/* Change Question Button */}
+              {onChangeQuestion && (
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    marginBottom: "20px",
+                  }}
+                >
+                  <Button
+                    variant="outlined"
+                    onClick={onChangeQuestion}
+                    sx={{
+                      borderColor: "#1E293B",
+                      color: "#1E293B",
+                      padding: "8px 16px",
+                      fontSize: "0.9rem",
+                      fontWeight: "bold",
+                      borderRadius: "8px",
+                      textTransform: "none",
+                      fontFamily: '"Cairo", "Noto Sans Arabic", sans-serif',
+                      "&:hover": {
+                        borderColor: "#4F46E5",
+                        color: "#4F46E5",
+                      },
+                    }}
+                  >
+                    تغيير السؤال
+                  </Button>
+                </Box>
+              )}
+
               {/* Answer Section - Only for Controller */}
               {answer && (
                 <Paper
@@ -130,6 +178,7 @@ const QuestionModal = ({
                     backgroundColor: "#EEF2FF",
                     borderRadius: "8px",
                     border: "2px solid #1E293B",
+                    marginTop: "20px",
                   }}
                 >
                   <Typography
@@ -137,21 +186,52 @@ const QuestionModal = ({
                     sx={{
                       color: "#1E293B",
                       fontWeight: "bold",
-                      marginBottom: "8px",
+                      marginBottom: "12px",
                       fontFamily: '"Cairo", "Noto Sans Arabic", sans-serif',
                     }}
                   >
                     :الإجابة
                   </Typography>
-                  <Typography
-                    variant="h6"
-                    sx={{
-                      color: "#1E293B",
-                      fontFamily: '"Cairo", "Noto Sans Arabic", sans-serif',
-                    }}
-                  >
-                    {answer}
-                  </Typography>
+
+                  {!isAnswerRevealed ? (
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Button
+                        variant="contained"
+                        startIcon={<Visibility />}
+                        onClick={() => setIsAnswerRevealed(true)}
+                        sx={{
+                          backgroundColor: "#1E293B",
+                          color: "white",
+                          padding: "10px 20px",
+                          fontSize: "1rem",
+                          fontWeight: "bold",
+                          borderRadius: "8px",
+                          textTransform: "none",
+                          "&:hover": {
+                            backgroundColor: "#4F46E5",
+                          },
+                        }}
+                      >
+                        إظهار الإجابة
+                      </Button>
+                    </Box>
+                  ) : (
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        color: "#1E293B",
+                        fontFamily: '"Cairo", "Noto Sans Arabic", sans-serif',
+                      }}
+                    >
+                      {answer}
+                    </Typography>
+                  )}
                 </Paper>
               )}
             </Box>

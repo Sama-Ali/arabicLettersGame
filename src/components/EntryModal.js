@@ -70,12 +70,35 @@ const EntryModal = () => {
         owner: "none",
       }));
 
+      // Create room first
+      const roomId = uuidv4();
+      const sharedId = generateSharedId();
+
+      const newRoom = {
+        roomId,
+        sharedId,
+      };
+
+      // Create room in database
+      const { error: roomError } = await supabase
+        .from("rooms")
+        .insert([newRoom]);
+
+      if (roomError) {
+        console.error("Error creating room:", roomError);
+        window.alert("حدث خطأ في إنشاء الغرفة. حاول مرة أخرى.");
+        setIsLoading(false);
+        return;
+      }
+
+      // Create first game in the room
       const gameId = uuidv4();
       const newGame = {
         gameId,
-        sharedId: generateSharedId(),
+        room: roomId, // Foreign key to room
         currentTeam: "green",
         boardState: initialBoard,
+        timerDuration: 15, // Default timer duration in seconds
       };
 
       const { error } = await supabase.from("games").insert([newGame]);
@@ -101,21 +124,36 @@ const EntryModal = () => {
 
     setIsLoading(true);
     try {
-      // Find game by sharedId
-      const { data, error } = await supabase
-        .from("games")
+      // Find room by sharedId
+      const { data: roomData, error: roomError } = await supabase
+        .from("rooms")
         .select("*")
         .eq("sharedId", roomCode.trim())
         .single();
 
-      if (error || !data) {
+      if (roomError || !roomData) {
         window.alert("لم يتم العثور على الغرفة. يرجى التحقق من الرمز.");
         setIsLoading(false);
         return;
       }
 
+      // Find the current active game in this room (most recent one that hasn't ended)
+      const { data: gameData, error: gameError } = await supabase
+        .from("games")
+        .select("*")
+        .eq("room", roomData.roomId)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .single();
+
+      if (gameError || !gameData) {
+        window.alert("لا توجد ألعاب نشطة في هذه الغرفة.");
+        setIsLoading(false);
+        return;
+      }
+
       // Navigate to player view
-      navigate(`/play/${data.gameId}`);
+      navigate(`/play/${gameData.gameId}`);
     } catch (error) {
       console.error("Error:", error);
       window.alert("حدث خطأ. حاول مرة أخرى.");

@@ -2,7 +2,13 @@ import React from "react";
 import { Box, Paper } from "@mui/material";
 import HexCell from "./HexCell";
 
-const GameBoard = ({ board, onCellClick, currentTeam, disabled }) => {
+const GameBoard = ({
+  board,
+  onCellClick,
+  currentTeam,
+  disabled,
+  selectedCellId,
+}) => {
   const boardStyle = {
     display: "flex",
     flexDirection: "column",
@@ -87,6 +93,7 @@ const GameBoard = ({ board, onCellClick, currentTeam, disabled }) => {
                 letter={cell.letter}
                 owner={cell.owner}
                 onClick={() => onCellClick(cellId)}
+                isSelected={selectedCellId === cellId}
                 // disabled={disabled || cell.owner !== "none"}
                 // disabled={disabled}
               />

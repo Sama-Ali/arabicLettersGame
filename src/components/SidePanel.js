@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Card,
@@ -8,8 +8,21 @@ import {
   Divider,
   Stack,
   Button,
+  FormControlLabel,
+  Switch,
+  ToggleButton,
+  ToggleButtonGroup,
+  TextField,
+  Tooltip,
 } from "@mui/material";
-import { Circle, VisibilityOff } from "@mui/icons-material";
+import {
+  Circle,
+  VolumeUp,
+  VolumeOff,
+  AccessTime,
+  Home,
+  Refresh,
+} from "@mui/icons-material";
 
 const SidePanel = ({
   greenScore,
@@ -19,9 +32,46 @@ const SidePanel = ({
   onAnswer,
   disabled,
   onPlayAgain,
+  onGoHome,
   sharedId,
   isQuestionRevealed,
+  timeLeft,
+  soundEnabled,
+  setSoundEnabled,
+  timerDuration,
+  setTimerDuration,
 }) => {
+  const [customTime, setCustomTime] = useState("");
+  const [isCustomMode, setIsCustomMode] = useState(false);
+
+  const handlePresetChange = (event, newDuration) => {
+    if (newDuration !== null) {
+      setTimerDuration(newDuration);
+      setIsCustomMode(false);
+      setCustomTime("");
+    }
+  };
+
+  const handleCustomTimeChange = (event) => {
+    const value = event.target.value;
+    // if (value === "" || (parseInt(value) >= 5 && parseInt(value) <= 300)) {
+    setCustomTime(value);
+    // }
+  };
+
+  const handleCustomTimeApply = () => {
+    const timeValue = parseInt(customTime);
+    if (timeValue >= 5 && timeValue <= 300) {
+      setTimerDuration(timeValue);
+      setIsCustomMode(true);
+    }
+  };
+
+  const presetOptions = [
+    { value: 15, label: "15" },
+    { value: 30, label: "30" },
+    { value: 60, label: "60" },
+  ];
   const panelStyle = {
     padding: "20px",
     backgroundColor: "#F8FAFC",
@@ -48,17 +98,6 @@ const SidePanel = ({
     borderRadius: "12px",
     boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
     marginBottom: "10px",
-  };
-
-  const playAgainButtonStyle = {
-    backgroundColor: "#1E293B",
-    color: "white",
-    padding: "12px 32px",
-    borderRadius: "8px",
-    fontSize: "1.1rem",
-    fontWeight: "bold",
-    textTransform: "none",
-    width: "100%",
   };
 
   return (
@@ -112,25 +151,16 @@ const SidePanel = ({
         </Paper>
       )}
 
-      <Divider sx={{ marginTop: "30px", marginBottom: "10px" }} />
+      <Divider sx={{ marginTop: "16px", marginBottom: "10px" }} />
 
       {/* Current Turn Indicator */}
       <Box sx={{ textAlign: "center", marginBottom: "10px" }}>
         <Typography variant="body1" sx={{ color: "#6B7280", marginBottom: 1 }}>
           دور
         </Typography>
-        {/* <Chip
-          label={currentTeam === "green" ? "الفريق الأخضر" : "الفريق البنفسجي"}
-          sx={{
-            backgroundColor: currentTeam === "green" ? "#22C55E" : "#A855F7",
-            color: "white",
-            fontWeight: "bold",
-            fontSize: "1.2rem",
-          }}
-        /> */}
       </Box>
 
-      <Stack spacing={2} sx={{ marginBottom: "40px" }}>
+      <Stack spacing={2} sx={{ marginBottom: "20px" }}>
         {/* Green Team */}
         <Card sx={teamCardStyle("green", currentTeam === "green")}>
           <CardContent sx={{ padding: "16px !important" }}>
@@ -172,95 +202,249 @@ const SidePanel = ({
         </Card>
       </Stack>
 
-      {/* Question Area */}
-      <Paper sx={questionStyle}>
-        <Typography
-          variant="h5"
+      {/* Timer Settings */}
+      <Paper
+        sx={{
+          ...questionStyle,
+          marginBottom: "20px",
+          backgroundColor: "#F8FAFC",
+        }}
+      >
+        <Box
           sx={{
-            textAlign: "center",
-            marginBottom: "30px",
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+            marginBottom: "16px",
           }}
         >
-          السؤال
-        </Typography>
+          <AccessTime sx={{ color: "#6B7280" }} />
+          <Typography
+            variant="h6"
+            sx={{
+              fontWeight: "bold",
+              color: "#1E293B",
+              fontFamily: '"Cairo", "Noto Sans Arabic", sans-serif',
+            }}
+          >
+            اختر المدة
+          </Typography>
+        </Box>
 
-        {!isQuestionRevealed ? (
-          <Box
+        {/* Preset Timer Options */}
+        <Box sx={{ marginBottom: "16px" }}>
+          <ToggleButtonGroup
+            value={isCustomMode ? "custom" : timerDuration}
+            exclusive
+            onChange={handlePresetChange}
+            aria-label="timer duration"
             sx={{
               display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: 2,
-              marginBottom: "20px",
+              gap: 0.5,
+              "& .MuiToggleButton-root": {
+                flex: 1,
+                padding: "8px 4px",
+                borderRadius: "8px !important",
+                border: "1px solid #1E293B",
+                textTransform: "none",
+                fontFamily: '"Cairo", "Noto Sans Arabic", sans-serif',
+                fontWeight: "bold",
+                "&.Mui-selected": {
+                  backgroundColor: "#1E293B",
+                  color: "white",
+                },
+              },
             }}
           >
-            <VisibilityOff sx={{ fontSize: "40px", color: "#9CA3AF" }} />
-            {/* <Button
-              variant="contained"
-              startIcon={<Visibility />}
-              onClick={() => setIsQuestionRevealed(true)}
+            {presetOptions.map((option) => (
+              <ToggleButton key={option.value} value={option.value}>
+                {option.label}
+              </ToggleButton>
+            ))}
+          </ToggleButtonGroup>
+        </Box>
+
+        {/* Custom Timer Input */}
+        <Box sx={{ marginBottom: "16px" }}>
+          <Typography
+            variant="body2"
+            sx={{
+              color: "#6B7280",
+              marginBottom: "8px",
+              fontFamily: '"Cairo", "Noto Sans Arabic", sans-serif',
+            }}
+          >
+            أو أدخل وقت مخصص (5-300 ثانية)
+          </Typography>
+          <Box sx={{ display: "flex", gap: 1 }}>
+            <TextField
+              type="number"
+              min={5}
+              max={300}
+              value={customTime}
+              onChange={handleCustomTimeChange}
+              placeholder="30"
+              size="small"
               sx={{
-                backgroundColor: "#6366F1",
-                color: "white",
-                padding: "12px 20px",
-                fontSize: "1rem",
-                fontWeight: "bold",
-                borderRadius: "8px",
-                textTransform: "none",
-                "&:hover": {
-                  backgroundColor: "#4F46E5",
+                flex: 1,
+                "& .MuiOutlinedInput-root": {
+                  fontFamily: '"Cairo", "Noto Sans Arabic", sans-serif',
                 },
               }}
+            />
+            <Button
+              variant="outlined"
+              onClick={handleCustomTimeApply}
+              sx={{
+                minWidth: "80px",
+                textTransform: "none",
+                fontFamily: '"Cairo", "Noto Sans Arabic", sans-serif',
+                fontWeight: "bold",
+                borderColor:
+                  !customTime ||
+                  parseInt(customTime) < 5 ||
+                  parseInt(customTime) > 300
+                    ? "red "
+                    : "#22C55E ",
+                color:
+                  !customTime ||
+                  parseInt(customTime) < 5 ||
+                  parseInt(customTime) > 300
+                    ? "red "
+                    : "#22C55E ",
+              }}
             >
-              إظهار السؤال
-            </Button> */}
+              تطبيق
+            </Button>
           </Box>
-        ) : (
-          <Typography
-            variant="body1"
-            sx={{
-              textAlign: "center",
-              marginBottom: "20px",
-              fontSize: "1.5rem",
-              lineHeight: 1.6,
-              color: "#4B5563",
-            }}
-          >
-            {currentQuestion || "ما هو العدد الأولي الأصغر من 10؟"}
-          </Typography>
+        </Box>
+        {isQuestionRevealed && currentQuestion && (
+          <Box sx={{ textAlign: "center", marginY: "4px" }}>
+            {/* Timer Section */}
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 1,
+                marginBottom: "10px",
+              }}
+            >
+              <Typography
+                variant="body2"
+                sx={{
+                  color: "#6B7280",
+                  fontWeight: "500",
+                }}
+              >
+                الوقت المتبقي
+              </Typography>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={soundEnabled}
+                    onChange={(e) => setSoundEnabled(e.target.checked)}
+                    color="primary"
+                    size="small"
+                  />
+                }
+                label={
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                    {soundEnabled ? (
+                      <VolumeUp sx={{ fontSize: 16, color: "#6B7280" }} />
+                    ) : (
+                      <VolumeOff sx={{ fontSize: 16, color: "#6B7280" }} />
+                    )}
+                  </Box>
+                }
+                sx={{
+                  margin: 0,
+                  "& .MuiFormControlLabel-label": {
+                    fontSize: "0.75rem",
+                    color: "#6B7280",
+                  },
+                }}
+              />
+            </Box>
+            <Box
+              sx={{
+                backgroundColor:
+                  timeLeft <= timerDuration / 3 ? "#FEE2E2" : "#EEF2FF",
+                color: timeLeft <= timerDuration / 3 ? "#DC2626" : "#1E293B",
+                padding: "20px",
+                borderRadius: "16px",
+                fontWeight: "bold",
+                fontSize: "3rem",
+                textAlign: "center",
+                border: `3px solid ${
+                  timeLeft <= timerDuration / 3 ? "#DC2626" : "#1E293B"
+                }`,
+                boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+              }}
+            >
+              {timeLeft}
+            </Box>
+          </Box>
         )}
-
-        {/* Answer Buttons */}
-        {/* <Stack spacing={2}>
-          <Button
-            variant="contained"
-            sx={answerButtonStyle("#22C55E")}
-            onClick={() => onAnswer("true")}
-            disabled={disabled}
-            fullWidth
-          >
-            صحيح
-          </Button>
-          <Button
-            variant="contained"
-            // red color
-            sx={answerButtonStyle("#F44336")}
-            onClick={() => onAnswer("false")}
-            disabled={disabled}
-            fullWidth
-          >
-            خطأ
-          </Button>
-        </Stack> */}
-        {/* play again button */}
-        <Button
-          variant="contained"
-          sx={{ ...playAgainButtonStyle, margin: "10px 0" }}
-          onClick={onPlayAgain}
-        >
-          لعب مرة أخرى
-        </Button>
       </Paper>
+
+      {/* Game Control Buttons */}
+      <Stack
+        direction="row"
+        justifyContent="space-around"
+        sx={{ textAlign: "center" }}
+      >
+        {/* Play Again Button */}
+        <Tooltip title="لعبة جديدة">
+          <Button
+            variant="contained"
+            sx={{
+              // flex: 1,
+              backgroundColor: "#22C55E",
+              color: "white",
+              padding: "12px 16px",
+              fontSize: "0.9rem",
+              fontWeight: "bold",
+              borderRadius: "8px",
+              textTransform: "none",
+              fontFamily: '"Cairo", "Noto Sans Arabic", sans-serif',
+              "&:hover": {
+                backgroundColor: "#16A34A",
+              },
+            }}
+            onClick={onPlayAgain}
+          >
+            <Refresh />
+          </Button>
+        </Tooltip>
+
+        {/* Home Button */}
+        <Tooltip title="عودة للصفحة الرئيسة">
+          <Button
+            variant="outlined"
+            sx={{
+              // flex: 1,
+              borderColor: "#6B7280",
+              color: "#6B7280",
+              padding: "12px 16px",
+              fontSize: "0.9rem",
+              fontWeight: "bold",
+              borderRadius: "8px",
+              textTransform: "none",
+              fontFamily: '"Cairo", "Noto Sans Arabic", sans-serif',
+
+              "&:hover": {
+                borderColor: "#1E293B",
+                backgroundColor: "#F9FAFB",
+                color: "#1E293B",
+              },
+            }}
+            onClick={onGoHome}
+          >
+            <Home />
+          </Button>
+        </Tooltip>
+      </Stack>
     </Box>
   );
 };

@@ -489,16 +489,96 @@ const PlayerView = () => {
             <Box sx={{ width: "100%", padding: "0 10px" }}>
               {/* Player Side Panel */}
               <Box sx={panelStyle}>
-                <Typography
-                  variant="h5"
-                  sx={{
-                    textAlign: "center",
-                    marginBottom: "16px",
-                  }}
-                  gutterBottom
-                >
-                  الفرق
-                </Typography>
+                {/* Timer Section - Mobile */}
+                {isQuestionRevealed && currentQuestion && (
+                  <>
+                    <Box sx={{ textAlign: "center", marginY: "20px" }}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          gap: 1,
+                          marginBottom: "12px",
+                        }}
+                      >
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            color: "#6B7280",
+                            fontWeight: "500",
+                          }}
+                        >
+                          الوقت المتبقي
+                        </Typography>
+                        <FormControlLabel
+                          control={
+                            <Switch
+                              checked={soundEnabled}
+                              onChange={(e) =>
+                                setSoundEnabled(e.target.checked)
+                              }
+                              color="primary"
+                              size="small"
+                            />
+                          }
+                          label={
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 0.5,
+                              }}
+                            >
+                              {soundEnabled ? (
+                                <VolumeUp
+                                  sx={{ fontSize: 16, color: "#6B7280" }}
+                                />
+                              ) : (
+                                <VolumeOff
+                                  sx={{ fontSize: 16, color: "#6B7280" }}
+                                />
+                              )}
+                            </Box>
+                          }
+                          sx={{
+                            margin: 0,
+                            "& .MuiFormControlLabel-label": {
+                              fontSize: "0.75rem",
+                              color: "#6B7280",
+                            },
+                          }}
+                        />
+                      </Box>
+                      <Box
+                        sx={{
+                          backgroundColor:
+                            timeLeft <= timerDuration / 3
+                              ? "#FEE2E2"
+                              : "#EEF2FF",
+                          color:
+                            timeLeft <= timerDuration / 3
+                              ? "#DC2626"
+                              : "#1E293B",
+                          padding: "20px",
+                          borderRadius: "16px",
+                          fontWeight: "bold",
+                          fontSize: "3rem",
+                          textAlign: "center",
+                          border: `3px solid ${
+                            timeLeft <= timerDuration / 3
+                              ? "#DC2626"
+                              : "#1E293B"
+                          }`,
+                          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                        }}
+                      >
+                        {timeLeft}
+                      </Box>
+                    </Box>
+                  </>
+                )}
+                <Divider sx={{ marginY: "20px" }} />
 
                 {/* Room Code Display */}
                 {sharedId && (
@@ -594,11 +674,28 @@ const PlayerView = () => {
                     </CardContent>
                   </Card>
                 </Stack>
+              </Box>
+            </Box>
+          </Stack>
+        ) : (
+          <Box sx={{ display: "flex", width: "100%", height: "80vh" }}>
+            {/* Game Board - 80% width */}
+            <Box sx={{ width: "78%", height: "100%" }}>
+              <GameBoard
+                board={board}
+                onCellClick={() => {}} // No click handler
+                currentTeam={currentTeam}
+                disabled={true} // Always disabled
+                selectedCellId={selectedCellId}
+              />
+            </Box>
 
-                {/* Timer Section - Mobile */}
+            {/* Side Panel - 20% width */}
+            <Box sx={{ width: "22%", height: "100%", paddingRight: "20px" }}>
+              <Box sx={panelStyle}>
+                {/* Timer Section - Desktop */}
                 {isQuestionRevealed && currentQuestion && (
                   <>
-                    <Divider sx={{ marginY: "20px" }} />
                     <Box sx={{ textAlign: "center", marginY: "20px" }}>
                       <Box
                         sx={{
@@ -685,35 +782,8 @@ const PlayerView = () => {
                     </Box>
                   </>
                 )}
-              </Box>
-            </Box>
-          </Stack>
-        ) : (
-          <Box sx={{ display: "flex", width: "100%", height: "80vh" }}>
-            {/* Game Board - 80% width */}
-            <Box sx={{ width: "78%", height: "100%" }}>
-              <GameBoard
-                board={board}
-                onCellClick={() => {}} // No click handler
-                currentTeam={currentTeam}
-                disabled={true} // Always disabled
-                selectedCellId={selectedCellId}
-              />
-            </Box>
 
-            {/* Side Panel - 20% width */}
-            <Box sx={{ width: "22%", height: "100%", paddingRight: "20px" }}>
-              <Box sx={panelStyle}>
-                <Typography
-                  variant="h5"
-                  sx={{
-                    textAlign: "center",
-                    marginBottom: "16px",
-                  }}
-                  gutterBottom
-                >
-                  الفرق
-                </Typography>
+                <Divider sx={{ marginY: "20px" }} />
 
                 {/* Room Code Display */}
                 {sharedId && (
@@ -809,97 +879,6 @@ const PlayerView = () => {
                     </CardContent>
                   </Card>
                 </Stack>
-
-                {/* Timer Section - Desktop */}
-                {isQuestionRevealed && currentQuestion && (
-                  <>
-                    <Divider sx={{ marginY: "20px" }} />
-                    <Box sx={{ textAlign: "center", marginY: "20px" }}>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          gap: 1,
-                          marginBottom: "12px",
-                        }}
-                      >
-                        <Typography
-                          variant="body2"
-                          sx={{
-                            color: "#6B7280",
-                            fontWeight: "500",
-                          }}
-                        >
-                          الوقت المتبقي
-                        </Typography>
-                        <FormControlLabel
-                          control={
-                            <Switch
-                              checked={soundEnabled}
-                              onChange={(e) =>
-                                setSoundEnabled(e.target.checked)
-                              }
-                              color="primary"
-                              size="small"
-                            />
-                          }
-                          label={
-                            <Box
-                              sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 0.5,
-                              }}
-                            >
-                              {soundEnabled ? (
-                                <VolumeUp
-                                  sx={{ fontSize: 16, color: "#6B7280" }}
-                                />
-                              ) : (
-                                <VolumeOff
-                                  sx={{ fontSize: 16, color: "#6B7280" }}
-                                />
-                              )}
-                            </Box>
-                          }
-                          sx={{
-                            margin: 0,
-                            "& .MuiFormControlLabel-label": {
-                              fontSize: "0.75rem",
-                              color: "#6B7280",
-                            },
-                          }}
-                        />
-                      </Box>
-                      <Box
-                        sx={{
-                          backgroundColor:
-                            timeLeft <= timerDuration / 3
-                              ? "#FEE2E2"
-                              : "#EEF2FF",
-                          color:
-                            timeLeft <= timerDuration / 3
-                              ? "#DC2626"
-                              : "#1E293B",
-                          padding: "20px",
-                          borderRadius: "16px",
-                          fontWeight: "bold",
-                          fontSize: "3rem",
-                          textAlign: "center",
-                          border: `3px solid ${
-                            timeLeft <= timerDuration / 3
-                              ? "#DC2626"
-                              : "#1E293B"
-                          }`,
-                          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-                        }}
-                      >
-                        {timeLeft}
-                      </Box>
-                    </Box>
-                  </>
-                )}
               </Box>
             </Box>
           </Box>

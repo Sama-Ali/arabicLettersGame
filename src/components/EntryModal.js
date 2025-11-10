@@ -226,7 +226,7 @@ const EntryModal = () => {
                 fontFamily: '"Cairo", "Noto Sans Arabic", sans-serif',
               }}
             >
-              {isLoading ? "جاري الإنشاء..." : "غرفة جديدة"}
+              {isLoading ? "...جاري الإنشاء" : "غرفة جديدة"}
             </Button>
 
             {/* Join Room Button */}

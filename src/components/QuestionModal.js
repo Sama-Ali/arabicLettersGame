@@ -11,6 +11,8 @@ import {
   DialogActions,
   FormControlLabel,
   Switch,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import {
   Visibility,
@@ -35,6 +37,8 @@ const QuestionModal = ({
   setSoundEnabled,
 }) => {
   const [isAnswerRevealed, setIsAnswerRevealed] = useState(false);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   // Reset answer reveal state when modal opens/closes or question changes
   useEffect(() => {
@@ -62,33 +66,45 @@ const QuestionModal = ({
       fullWidth
       PaperProps={{
         sx: {
-          borderRadius: "16px",
-          padding: "20px",
+          borderRadius: { xs: "12px", sm: "16px" },
+          padding: { xs: "12px", sm: "20px" },
+          margin: { xs: "8px", sm: "32px" },
         },
       }}
     >
-      <DialogTitle sx={{ textAlign: "center", padding: "20px 0" }}>
+      <DialogTitle
+        sx={{
+          textAlign: "center",
+          padding: { xs: "12px 0", sm: "20px 0" },
+        }}
+      >
         <Typography
           component="div"
-          variant="h4"
+          variant={isMobile ? "h5" : "h4"}
           sx={{
             fontWeight: "bold",
             color: "#1E293B",
             fontFamily: '"Cairo", "Noto Sans Arabic", sans-serif',
             marginBottom: 1,
+            fontSize: { xs: "1.25rem", sm: "2.125rem" },
           }}
         >
           الحرف المختار: {selectedCell.letter}
         </Typography>
       </DialogTitle>
 
-      <DialogContent sx={{ textAlign: "center", padding: "20px 0" }}>
+      <DialogContent
+        sx={{
+          textAlign: "center",
+          padding: { xs: "12px 0", sm: "20px 0" },
+        }}
+      >
         <Paper
           sx={{
-            padding: "30px",
+            padding: { xs: "16px", sm: "30px" },
             backgroundColor: "#F8FAFC",
-            borderRadius: "12px",
-            marginBottom: "30px",
+            borderRadius: { xs: "8px", sm: "12px" },
+            marginBottom: { xs: "16px", sm: "30px" },
             position: "relative",
           }}
         >
@@ -96,9 +112,10 @@ const QuestionModal = ({
             variant="h6"
             sx={{
               color: "#374151",
-              marginBottom: "20px",
+              marginBottom: { xs: "12px", sm: "20px" },
               fontWeight: "bold",
               fontFamily: '"Cairo", "Noto Sans Arabic", sans-serif',
+              fontSize: { xs: "1rem", sm: "1.25rem" },
             }}
           >
             :السؤال
@@ -112,7 +129,12 @@ const QuestionModal = ({
                 alignItems: "center",
               }}
             >
-              <VisibilityOff sx={{ fontSize: "40px", color: "#9CA3AF" }} />
+              <VisibilityOff
+                sx={{
+                  fontSize: { xs: "32px", sm: "40px" },
+                  color: "#9CA3AF",
+                }}
+              />
 
               <Button
                 variant="h5"
@@ -121,11 +143,12 @@ const QuestionModal = ({
                 sx={{
                   backgroundColor: "#1E293B",
                   color: "white",
-                  padding: "12px 20px",
-                  fontSize: "1.1rem",
+                  padding: { xs: "10px 16px", sm: "12px 20px" },
+                  fontSize: { xs: "0.9rem", sm: "1.1rem" },
                   fontWeight: "bold",
                   borderRadius: "8px",
                   textTransform: "none",
+                  marginTop: { xs: "8px", sm: "12px" },
                   "&:hover": {
                     backgroundColor: "#4F46E5",
                   },
@@ -137,12 +160,14 @@ const QuestionModal = ({
           ) : (
             <Box>
               <Typography
-                variant="h5"
+                variant={isMobile ? "h6" : "h5"}
                 sx={{
                   color: "#1E293B",
                   lineHeight: 1.6,
                   fontFamily: '"Cairo", "Noto Sans Arabic", sans-serif',
-                  marginBottom: "20px",
+                  marginBottom: { xs: "12px", sm: "20px" },
+                  fontSize: { xs: "1.1rem", sm: "1.5rem" },
+                  padding: { xs: "0 8px", sm: "0" },
                 }}
               >
                 {question}
@@ -150,14 +175,20 @@ const QuestionModal = ({
 
               {/* Timer Display */}
               {timeLeft !== undefined && timerDuration !== undefined && (
-                <Box sx={{ textAlign: "center", marginBottom: "20px" }}>
+                <Box
+                  sx={{
+                    textAlign: "center",
+                    marginBottom: { xs: "12px", sm: "20px" },
+                  }}
+                >
                   <Box
                     sx={{
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      gap: 1,
-                      marginBottom: "10px",
+                      gap: { xs: 0.5, sm: 1 },
+                      marginBottom: { xs: "8px", sm: "10px" },
+                      flexWrap: "wrap",
                     }}
                   >
                     <Typography
@@ -166,6 +197,7 @@ const QuestionModal = ({
                         color: "#6B7280",
                         fontWeight: "500",
                         fontFamily: '"Cairo", "Noto Sans Arabic", sans-serif',
+                        fontSize: { xs: "0.75rem", sm: "0.875rem" },
                       }}
                     >
                       الوقت المتبقي
@@ -215,10 +247,10 @@ const QuestionModal = ({
                         timeLeft <= timerDuration / 3 ? "#FEE2E2" : "#EEF2FF",
                       color:
                         timeLeft <= timerDuration / 3 ? "#DC2626" : "#1E293B",
-                      padding: "20px",
-                      borderRadius: "16px",
+                      padding: { xs: "16px", sm: "20px" },
+                      borderRadius: { xs: "12px", sm: "16px" },
                       fontWeight: "bold",
-                      fontSize: "3rem",
+                      fontSize: { xs: "2rem", sm: "3rem" },
                       textAlign: "center",
                       border: `3px solid ${
                         timeLeft <= timerDuration / 3 ? "#DC2626" : "#1E293B"
@@ -237,7 +269,7 @@ const QuestionModal = ({
                   sx={{
                     display: "flex",
                     justifyContent: "center",
-                    marginBottom: "20px",
+                    marginBottom: { xs: "12px", sm: "20px" },
                   }}
                 >
                   <Button
@@ -246,8 +278,8 @@ const QuestionModal = ({
                     sx={{
                       borderColor: "#1E293B",
                       color: "#1E293B",
-                      padding: "8px 16px",
-                      fontSize: "0.9rem",
+                      padding: { xs: "6px 12px", sm: "8px 16px" },
+                      fontSize: { xs: "0.8rem", sm: "0.9rem" },
                       fontWeight: "bold",
                       borderRadius: "8px",
                       textTransform: "none",
@@ -268,11 +300,11 @@ const QuestionModal = ({
                 <Paper
                   elevation={2}
                   sx={{
-                    padding: "15px",
+                    padding: { xs: "12px", sm: "15px" },
                     backgroundColor: "#EEF2FF",
-                    borderRadius: "8px",
+                    borderRadius: { xs: "6px", sm: "8px" },
                     border: "2px solid #1E293B",
-                    marginTop: "20px",
+                    marginTop: { xs: "12px", sm: "20px" },
                   }}
                 >
                   <Typography
@@ -280,8 +312,9 @@ const QuestionModal = ({
                     sx={{
                       color: "#1E293B",
                       fontWeight: "bold",
-                      marginBottom: "12px",
+                      marginBottom: { xs: "8px", sm: "12px" },
                       fontFamily: '"Cairo", "Noto Sans Arabic", sans-serif',
+                      fontSize: { xs: "0.875rem", sm: "1rem" },
                     }}
                   >
                     :الإجابة
@@ -302,8 +335,8 @@ const QuestionModal = ({
                         sx={{
                           backgroundColor: "#1E293B",
                           color: "white",
-                          padding: "10px 20px",
-                          fontSize: "1rem",
+                          padding: { xs: "8px 16px", sm: "10px 20px" },
+                          fontSize: { xs: "0.875rem", sm: "1rem" },
                           fontWeight: "bold",
                           borderRadius: "8px",
                           textTransform: "none",
@@ -317,10 +350,11 @@ const QuestionModal = ({
                     </Box>
                   ) : (
                     <Typography
-                      variant="h6"
+                      variant={isMobile ? "body1" : "h6"}
                       sx={{
                         color: "#1E293B",
                         fontFamily: '"Cairo", "Noto Sans Arabic", sans-serif',
+                        fontSize: { xs: "1rem", sm: "1.25rem" },
                       }}
                     >
                       {answer}
@@ -332,32 +366,43 @@ const QuestionModal = ({
           )}
         </Paper>
 
-        <Box sx={{ textAlign: "center", marginBottom: "20px" }}>
+        <Box
+          sx={{
+            textAlign: "center",
+            marginBottom: { xs: "12px", sm: "20px" },
+          }}
+        >
           <Typography
             variant="h6"
             sx={{
               color: "#374151",
-              marginBottom: "15px",
+              marginBottom: { xs: "10px", sm: "15px" },
               fontWeight: "bold",
               fontFamily: '"Cairo", "Noto Sans Arabic", sans-serif',
+              fontSize: { xs: "1rem", sm: "1.25rem" },
             }}
           >
             :اختر لون الخلية
           </Typography>
-          <Stack spacing={2} direction="row" justifyContent="center">
+          <Stack
+            spacing={{ xs: 1.5, sm: 2 }}
+            direction={{ xs: "column", sm: "row" }}
+            justifyContent="center"
+            sx={{ width: "100%" }}
+          >
             <Button
               variant="contained"
-              size="large"
+              size={isMobile ? "medium" : "large"}
               onClick={() => handleAnswer("green")}
               sx={{
                 backgroundColor: "#22C55E",
                 color: "white",
-                padding: "15px 30px",
-                fontSize: "1.2rem",
+                padding: { xs: "12px 20px", sm: "15px 30px" },
+                fontSize: { xs: "1rem", sm: "1.2rem" },
                 fontWeight: "bold",
-                borderRadius: "12px",
+                borderRadius: { xs: "8px", sm: "12px" },
                 textTransform: "none",
-                minWidth: "130px",
+                minWidth: { xs: "100%", sm: "130px" },
                 "&:hover": {
                   backgroundColor: "#16A34A",
                 },
@@ -368,17 +413,17 @@ const QuestionModal = ({
 
             <Button
               variant="contained"
-              size="large"
+              size={isMobile ? "medium" : "large"}
               onClick={() => handleAnswer("purple")}
               sx={{
                 backgroundColor: "#A855F7",
                 color: "white",
-                padding: "15px 30px",
-                fontSize: "1.2rem",
+                padding: { xs: "12px 20px", sm: "15px 30px" },
+                fontSize: { xs: "1rem", sm: "1.2rem" },
                 fontWeight: "bold",
-                borderRadius: "12px",
+                borderRadius: { xs: "8px", sm: "12px" },
                 textTransform: "none",
-                minWidth: "130px",
+                minWidth: { xs: "100%", sm: "130px" },
                 "&:hover": {
                   backgroundColor: "#9333EA",
                 },
@@ -389,17 +434,17 @@ const QuestionModal = ({
 
             <Button
               variant="contained"
-              size="large"
+              size={isMobile ? "medium" : "large"}
               onClick={() => handleAnswer("none")}
               sx={{
                 backgroundColor: "#FFFFFF",
                 color: "#374151",
-                padding: "15px 30px",
-                fontSize: "1.2rem",
+                padding: { xs: "12px 20px", sm: "15px 30px" },
+                fontSize: { xs: "1rem", sm: "1.2rem" },
                 fontWeight: "bold",
-                borderRadius: "12px",
+                borderRadius: { xs: "8px", sm: "12px" },
                 textTransform: "none",
-                minWidth: "130px",
+                minWidth: { xs: "100%", sm: "130px" },
                 border: "2px solid #E5E7EB",
                 "&:hover": {
                   backgroundColor: "#F3F4F6",
@@ -413,18 +458,24 @@ const QuestionModal = ({
       </DialogContent>
 
       {/* cancel button */}
-      <DialogActions sx={{ justifyContent: "center", padding: "20px 0" }}>
+      <DialogActions
+        sx={{
+          justifyContent: "center",
+          padding: { xs: "12px 0", sm: "20px 0" },
+        }}
+      >
         <Button
           variant="outlined"
           onClick={onClose}
           sx={{
             borderColor: "#D1D5DB",
             color: "#6B7280",
-            padding: "10px 24px",
-            fontSize: "1rem",
+            padding: { xs: "8px 20px", sm: "10px 24px" },
+            fontSize: { xs: "0.875rem", sm: "1rem" },
             fontWeight: "bold",
             borderRadius: "8px",
             textTransform: "none",
+            width: { xs: "100%", sm: "auto" },
             "&:hover": {
               borderColor: "#9CA3AF",
               backgroundColor: "#F9FAFB",

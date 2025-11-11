@@ -9,8 +9,15 @@ import {
   Stack,
   Box,
   DialogActions,
+  FormControlLabel,
+  Switch,
 } from "@mui/material";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import {
+  Visibility,
+  VisibilityOff,
+  VolumeUp,
+  VolumeOff,
+} from "@mui/icons-material";
 
 const QuestionModal = ({
   open,
@@ -22,6 +29,10 @@ const QuestionModal = ({
   isQuestionRevealed,
   onRevealQuestion,
   onChangeQuestion,
+  timeLeft,
+  timerDuration,
+  soundEnabled,
+  setSoundEnabled,
 }) => {
   const [isAnswerRevealed, setIsAnswerRevealed] = useState(false);
 
@@ -136,6 +147,89 @@ const QuestionModal = ({
               >
                 {question}
               </Typography>
+
+              {/* Timer Display */}
+              {timeLeft !== undefined && timerDuration !== undefined && (
+                <Box sx={{ textAlign: "center", marginBottom: "20px" }}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: 1,
+                      marginBottom: "10px",
+                    }}
+                  >
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: "#6B7280",
+                        fontWeight: "500",
+                        fontFamily: '"Cairo", "Noto Sans Arabic", sans-serif',
+                      }}
+                    >
+                      الوقت المتبقي
+                    </Typography>
+                    {soundEnabled !== undefined && setSoundEnabled && (
+                      <FormControlLabel
+                        control={
+                          <Switch
+                            checked={soundEnabled}
+                            onChange={(e) => setSoundEnabled(e.target.checked)}
+                            color="primary"
+                            size="small"
+                          />
+                        }
+                        label={
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 0.5,
+                            }}
+                          >
+                            {soundEnabled ? (
+                              <VolumeUp
+                                sx={{ fontSize: 16, color: "#6B7280" }}
+                              />
+                            ) : (
+                              <VolumeOff
+                                sx={{ fontSize: 16, color: "#6B7280" }}
+                              />
+                            )}
+                          </Box>
+                        }
+                        sx={{
+                          margin: 0,
+                          "& .MuiFormControlLabel-label": {
+                            fontSize: "0.75rem",
+                            color: "#6B7280",
+                          },
+                        }}
+                      />
+                    )}
+                  </Box>
+                  <Box
+                    sx={{
+                      backgroundColor:
+                        timeLeft <= timerDuration / 3 ? "#FEE2E2" : "#EEF2FF",
+                      color:
+                        timeLeft <= timerDuration / 3 ? "#DC2626" : "#1E293B",
+                      padding: "20px",
+                      borderRadius: "16px",
+                      fontWeight: "bold",
+                      fontSize: "3rem",
+                      textAlign: "center",
+                      border: `3px solid ${
+                        timeLeft <= timerDuration / 3 ? "#DC2626" : "#1E293B"
+                      }`,
+                      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                    }}
+                  >
+                    {timeLeft}
+                  </Box>
+                </Box>
+              )}
 
               {/* Change Question Button */}
               {onChangeQuestion && (

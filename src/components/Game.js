@@ -7,6 +7,7 @@ import {
   useTheme,
   Stack,
   CircularProgress,
+  Typography,
 } from "@mui/material";
 import GameBoard from "./GameBoard";
 import SidePanel from "./SidePanel";
@@ -679,6 +680,74 @@ const Game = () => {
           {/* Header */}
           <Header showSubtitle={true} />
 
+          {/* Question Section - Prominent Display */}
+          <Box
+            sx={{
+              marginBottom: { xs: "5px", sm: "8px", md: "10px" },
+              padding: { xs: "8px", sm: "10px", md: "12px" },
+              backgroundColor: "white",
+              borderRadius: "12px",
+              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+              minHeight: "50px",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Box
+              sx={{
+                padding: { xs: "6px", sm: "8px", md: "10px" },
+                backgroundColor: "#F3F4F6",
+                borderRadius: "10px",
+                minHeight: "35px",
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              {currentQuestion && isQuestionRevealed ? (
+                <Typography
+                  variant="h6"
+                  sx={{
+                    textAlign: "center",
+                    fontSize: { xs: "1.4rem", sm: "1.5rem", md: "1.6rem" },
+                    color: "#1F2937",
+                    fontFamily: '"Cairo", "Noto Sans Arabic", sans-serif',
+                    fontWeight: "700",
+                  }}
+                >
+                  {currentQuestion}
+                </Typography>
+              ) : currentQuestion && !isQuestionRevealed ? (
+                <Typography
+                  variant="body2"
+                  sx={{
+                    textAlign: "center",
+                    color: "#9CA3AF",
+                    fontStyle: "italic",
+                    fontFamily: '"Cairo", "Noto Sans Arabic", sans-serif',
+                  }}
+                >
+                  السؤال مخفي...
+                </Typography>
+              ) : (
+                <Typography
+                  variant="body2"
+                  sx={{
+                    textAlign: "center",
+                    color: "#9CA3AF",
+                    fontStyle: "italic",
+                    fontFamily: '"Cairo", "Noto Sans Arabic", sans-serif',
+                  }}
+                >
+                  لا يوجد سؤال حالياً
+                </Typography>
+              )}
+            </Box>
+          </Box>
+
           {/* Game Layout */}
           {isMobile ? (
             <Stack spacing={2} sx={{ width: "100%" }}>
@@ -762,6 +831,10 @@ const Game = () => {
             isQuestionRevealed={isQuestionRevealed}
             onRevealQuestion={handleRevealQuestion}
             onChangeQuestion={handleChangeQuestion}
+            timeLeft={timeLeft}
+            timerDuration={timerDuration}
+            soundEnabled={soundEnabled}
+            setSoundEnabled={setSoundEnabled}
           />
         </Container>
       </Box>
